@@ -3,20 +3,103 @@ name: Release
 on:
   push:
     tags:
-      - "v*.*.*"
+      - "v*"
 
 jobs:
-  publish:
+  release:
     runs-on: windows-latest
     permissions:
       contents: write
+    env:
+      DOTNET_NOLOGO: true
+      CONFIGURATION: Release
+      RUNTIME: win-x64
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-dotnet@v4
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup .NET 8
+        uses: actions/setup-dotnet@v4
         with:
           dotnet-version: 8.0.x
-      - run: dotnet publish src/SimpleLauncher/SimpleLauncher.csproj --configuration Release --runtime win-x64 --self-contained true -p:PublishSingleFile=true -p:EnableCompressionInSingleFile=true --output artifacts/SimpleLauncher
-      - run: Compress-Archive -Path artifacts/SimpleLauncher/* -DestinationPath artifacts/SimpleLauncher-win-x64.zip
-      - uses: softprops/action-gh-release@v2
+
+      - name: Resolve version
+        id: version
+        shell: pwsh
+        run: |
+          $tag = "${env:GITHUB_REF_NAME}"
+          $version = $tag.TrimStart("v")
+          "tag=$tag" >> $env:GITHUB_OUTPUT
+          "version=$version" >> $env:GITHUB_OUTPUT
+          "zip_name=SimpleLauncher-v$version-win-x64.zip" >> $env:GITHUB_OUTPUT
+
+      - name: Restore
+        run: dotnet restore SimpleLauncher.sln
+
+      - name: Build
+        run: dotnet build SimpleLauncher.sln --configuration $env:CONFIGURATION --no-restore
+
+      - name: Test
+        run: dotnet test SimpleLauncher.sln --configuration $env:CONFIGURATION --no-build
+
+      - name: Publish
+        run: >
+          dotnet publish src/SimpleLauncher/SimpleLauncher.csproj
+          --configuration $env:CONFIGURATION
+          --runtime $env:RUNTIME
+          --self-contained true
+          -p:PublishSingleFile=true
+          -p:SelfContained=true
+          -p:PublishReadyToRun=true
+          -p:EnableCompressionInSingleFile=true
+          -p:DebugType=None
+          -p:DebugSymbols=false
+          --output artifacts/publish
+
+      - name: Prepare release folder
+        shell: pwsh
+        run: |
+          $releaseRoot = "artifacts/release/SimpleLauncher"
+          if (Test-Path -LiteralPath "artifacts/release") {
+            Remove-Item -LiteralPath "artifacts/release" -Recurse -Force
+          }
+          New-Item -ItemType Directory -Force -Path $releaseRoot | Out-Null
+          Copy-Item -LiteralPath "artifacts/publish/SimpleLauncher.exe" -Destination $releaseRoot
+          Copy-Item -LiteralPath "README.md" -Destination $releaseRoot
+          Copy-Item -LiteralPath "LICENSE" -Destination $releaseRoot
+          Copy-Item -LiteralPath "NOTICE" -Destination $releaseRoot
+          New-Item -ItemType Directory -Force -Path "$releaseRoot/Assets" | Out-Null
+          Copy-Item -LiteralPath "artifacts/publish/Assets/Background.jpg" -Destination "$releaseRoot/Assets"
+          Copy-Item -LiteralPath "artifacts/publish/Assets/SimpleLauncher.ico" -Destination "$releaseRoot/Assets"
+          $excludedFiles = Get-ChildItem -LiteralPath $releaseRoot -Recurse -Include *.pdb,*.tmp,*.log
+          if ($excludedFiles) {
+            $excludedFiles | Remove-Item -Force
+          }
+
+      - name: Package
+        shell: pwsh
+        run: |
+          $zipPath = "artifacts/${{ steps.version.outputs.zip_name }}"
+          if (Test-Path -LiteralPath $zipPath) {
+            Remove-Item -LiteralPath $zipPath -Force
+          }
+          Compress-Archive -Path "artifacts/release/SimpleLauncher/*" -DestinationPath $zipPath -CompressionLevel Optimal
+
+      - name: Generate checksums
+        shell: pwsh
+        run: |
+          $zipName = "${{ steps.version.outputs.zip_name }}"
+          $zipPath = "artifacts/$zipName"
+          $hash = (Get-FileHash -LiteralPath $zipPath -Algorithm SHA256).Hash.ToLowerInvariant()
+          "$hash  $zipName" | Out-File -LiteralPath "artifacts/SHA256SUMS.txt" -Encoding ascii -NoNewline
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
         with:
-          files: artifacts/SimpleLauncher-win-x64.zip
+          tag_name: ${{ steps.version.outputs.tag }}
+          name: SimpleLauncher ${{ steps.version.outputs.tag }}
+          generate_release_notes: true
+          fail_on_unmatched_files: true
+          files: |
+            artifacts/${{ steps.version.outputs.zip_name }}
+            artifacts/SHA256SUMS.txt

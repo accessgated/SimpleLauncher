@@ -47,6 +47,37 @@ dotnet build SimpleLauncher.sln --configuration Release
 dotnet test SimpleLauncher.sln --configuration Release
 ```
 
+## Publishing Locally
+
+Create a self-contained Windows x64 build with:
+
+```powershell
+dotnet publish src/SimpleLauncher/SimpleLauncher.csproj `
+  --configuration Release `
+  --runtime win-x64 `
+  --self-contained true `
+  -p:PublishSingleFile=true `
+  -p:SelfContained=true `
+  -p:PublishReadyToRun=true `
+  -p:EnableCompressionInSingleFile=true `
+  -p:DebugType=None `
+  -p:DebugSymbols=false `
+  --output artifacts/publish
+```
+
+The GitHub Release workflow packages only `SimpleLauncher.exe`, `README.md`, `LICENSE`, `NOTICE`, and required runtime assets.
+
+## Creating a GitHub Release
+
+Releases are fully automated from Git tags:
+
+```powershell
+git tag v1.0.0
+git push origin v1.0.0
+```
+
+After the tag is pushed, GitHub Actions restores, builds, tests, publishes, packages `SimpleLauncher-v1.0.0-win-x64.zip`, generates `SHA256SUMS.txt`, creates or updates the GitHub Release, and uploads both assets. No signing certificate, paid service, or secret beyond the default `GITHUB_TOKEN` is required.
+
 ## Configuration
 
 SimpleLauncher stores configuration at:
