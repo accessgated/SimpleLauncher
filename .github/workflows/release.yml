@@ -64,7 +64,7 @@ jobs:
             Remove-Item -LiteralPath "artifacts/release" -Recurse -Force
           }
           New-Item -ItemType Directory -Force -Path $releaseRoot | Out-Null
-          Copy-Item -LiteralPath "artifacts/publish/SimpleLauncher.exe" -Destination $releaseRoot
+          Copy-Item -Path "artifacts/publish/*" -Destination $releaseRoot -Recurse -Force
           Copy-Item -LiteralPath "README.md" -Destination $releaseRoot
           Copy-Item -LiteralPath "LICENSE" -Destination $releaseRoot
           Copy-Item -LiteralPath "NOTICE" -Destination $releaseRoot
