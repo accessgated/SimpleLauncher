@@ -1,0 +1,50 @@
+<Window x:Class="SimpleLauncher.Presentation.Windows.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="SimpleLauncher"
+        WindowStyle="None"
+        WindowState="Maximized"
+        ResizeMode="NoResize"
+        Background="{DynamicResource LauncherBackgroundBrush}">
+    <Grid>
+        <Image x:Name="BackgroundImage" Stretch="UniformToFill" Opacity="0.28" />
+        <Grid Margin="32">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+            <DockPanel>
+                <TextBlock Text="SimpleLauncher" FontSize="30" FontWeight="SemiBold" Foreground="{DynamicResource LauncherTextBrush}" DockPanel.Dock="Left" />
+                <StackPanel Orientation="Horizontal" DockPanel.Dock="Right" HorizontalAlignment="Right">
+                    <TextBox x:Name="SearchBox" Width="280" Height="36" Margin="0,0,10,0" VerticalContentAlignment="Center" TextChanged="OnSearchChanged" />
+                    <Button Content="Add" Width="82" Margin="0,0,8,0" Click="OnAddApplication" />
+                    <Button Content="Settings" Width="96" Margin="0,0,8,0" Click="OnSettings" />
+                    <Button Content="Exit" Width="82" Click="OnExit" />
+                </StackPanel>
+            </DockPanel>
+            <ScrollViewer Grid.Row="1" Margin="0,28,0,0" VerticalScrollBarVisibility="Auto">
+                <ItemsControl x:Name="AppsList">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <WrapPanel />
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <Button Style="{StaticResource LauncherTileButtonStyle}"
+                                    Width="{Binding TileSize}"
+                                    Height="{Binding TileHeight}"
+                                    Click="OnLaunchApplication"
+                                    Tag="{Binding Id}">
+                                <StackPanel>
+                                    <Image Source="{Binding Icon}" Width="{Binding IconSize}" Height="{Binding IconSize}" HorizontalAlignment="Center" />
+                                    <TextBlock Text="{Binding DisplayName}" Margin="0,12,0,0" TextAlignment="Center" TextWrapping="Wrap" Foreground="{DynamicResource LauncherTextBrush}" />
+                                </StackPanel>
+                            </Button>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </ScrollViewer>
+        </Grid>
+    </Grid>
+</Window>

@@ -1,0 +1,10 @@
+title: "Idea: "
+labels: ["idea"]
+body:
+  - type: textarea
+    id: idea
+    attributes:
+      label: Idea
+      description: What would you like SimpleLauncher to support?
+    validations:
+      required: true

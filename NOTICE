@@ -1,0 +1,3 @@
+SimpleLauncher includes no third-party runtime dependencies in the application project.
+
+The test project uses Microsoft test packages during development and CI.

@@ -1,0 +1,57 @@
+<Window x:Class="SimpleLauncher.Presentation.Windows.SettingsWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Settings"
+        Width="760"
+        Height="520"
+        MinWidth="680"
+        MinHeight="460"
+        WindowStartupLocation="CenterOwner"
+        Background="{DynamicResource LauncherSurfaceBrush}">
+    <Grid Margin="24">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="2*" />
+            <ColumnDefinition Width="3*" />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <DockPanel>
+            <TextBlock Text="Applications" FontSize="18" FontWeight="SemiBold" Foreground="{DynamicResource LauncherTextBrush}" DockPanel.Dock="Top" Margin="0,0,0,12" />
+            <ListBox x:Name="AppsList" DisplayMemberPath="DisplayName" SelectionChanged="OnSelectionChanged" />
+        </DockPanel>
+
+        <StackPanel Grid.Column="1" Margin="24,0,0,0">
+            <TextBlock Text="Selected application" FontSize="18" FontWeight="SemiBold" Foreground="{DynamicResource LauncherTextBrush}" />
+            <TextBox x:Name="NameBox" Height="34" Margin="0,12,0,8" VerticalContentAlignment="Center" />
+            <TextBox x:Name="CategoryBox" Height="34" Margin="0,0,0,8" VerticalContentAlignment="Center" />
+            <CheckBox x:Name="FavoriteBox" Content="Favorite" Foreground="{DynamicResource LauncherTextBrush}" Margin="0,4,0,0" />
+            <CheckBox x:Name="RequiresPinBox" Content="Require PIN" Foreground="{DynamicResource LauncherTextBrush}" Margin="0,8,0,18" />
+            <StackPanel Orientation="Horizontal">
+                <Button Content="Apply" Width="88" Margin="0,0,8,0" Click="OnApplyApplication" />
+                <Button Content="Remove" Width="88" Click="OnRemoveApplication" />
+            </StackPanel>
+
+            <Separator Margin="0,24,0,18" />
+
+            <TextBlock Text="Launcher" FontSize="18" FontWeight="SemiBold" Foreground="{DynamicResource LauncherTextBrush}" />
+            <TextBlock Text="Icon size" Foreground="{DynamicResource LauncherMutedTextBrush}" Margin="0,12,0,4" />
+            <Slider x:Name="IconSizeSlider" Minimum="48" Maximum="192" TickFrequency="8" IsSnapToTickEnabled="True" />
+            <CheckBox x:Name="LockSettingsBox" Content="Protect settings with PIN" Foreground="{DynamicResource LauncherTextBrush}" Margin="0,12,0,0" />
+            <CheckBox x:Name="HideTaskbarBox" Content="Hide taskbar in fullscreen mode" Foreground="{DynamicResource LauncherTextBrush}" Margin="0,8,0,0" />
+
+            <StackPanel Orientation="Horizontal" Margin="0,24,0,0">
+                <Button Content="Backup" Width="88" Margin="0,0,8,0" Click="OnBackup" />
+                <Button Content="Import" Width="88" Margin="0,0,8,0" Click="OnImport" />
+                <Button Content="Export" Width="88" Click="OnExport" />
+            </StackPanel>
+        </StackPanel>
+
+        <StackPanel Grid.Row="1" Grid.ColumnSpan="2" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,24,0,0">
+            <Button Content="Cancel" Width="88" Margin="0,0,8,0" IsCancel="True" />
+            <Button Content="Save" Width="88" IsDefault="True" Click="OnSave" />
+        </StackPanel>
+    </Grid>
+</Window>
