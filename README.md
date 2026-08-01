@@ -76,11 +76,11 @@ The GitHub Release workflow packages only `SimpleLauncher.exe`, `README.md`, `LI
 Releases are fully automated from Git tags:
 
 ```powershell
-git tag v0.1.3
-git push origin v0.1.3
+git tag v0.1.5hotfix
+git push origin v0.1.5hotfix
 ```
 
-After the tag is pushed, GitHub Actions restores, builds, tests, publishes, packages `SimpleLauncher-v0.1.3-win-x64.zip`, generates `SHA256SUMS.txt`, creates or updates the GitHub Release, and uploads both assets. No signing certificate, paid service, or secret beyond the default `GITHUB_TOKEN` is required.
+After the tag is pushed, GitHub Actions restores, builds, tests, publishes, packages `SimpleLauncher-v0.1.5hotfix-win-x64.zip`, generates `SHA256SUMS.txt`, creates or updates the GitHub Release, and uploads both assets. No signing certificate, paid service, or secret beyond the default `GITHUB_TOKEN` is required.
 
 ## Configuration
 
