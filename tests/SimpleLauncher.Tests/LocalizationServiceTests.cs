@@ -23,6 +23,10 @@ public class LocalizationServiceTests
 
         Assert.AreEqual("Settings", result);
 
-        Directory.Delete(tempDirectory, true);
+        logger.Dispose();
+        if (Directory.Exists(tempDirectory))
+        {
+            Directory.Delete(tempDirectory, true);
+        }
     }
 }
