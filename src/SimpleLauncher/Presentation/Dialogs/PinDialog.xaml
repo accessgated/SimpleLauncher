@@ -6,18 +6,19 @@
         Height="190"
         WindowStartupLocation="CenterOwner"
         ResizeMode="NoResize"
-        Background="{DynamicResource LauncherSurfaceBrush}">
+        Background="{DynamicResource LauncherSurfaceBrush}"
+        FontFamily="Segoe UI">
     <Grid Margin="24">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
-        <TextBlock Text="Enter PIN" FontSize="20" FontWeight="SemiBold" Foreground="{DynamicResource LauncherTextBrush}" />
+        <TextBlock x:Name="PromptText" Text="Enter PIN" FontSize="20" FontWeight="SemiBold" Foreground="{DynamicResource LauncherTextBrush}" />
         <PasswordBox x:Name="PinBox" Grid.Row="1" Margin="0,18,0,0" Height="36" FontSize="18" />
         <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Bottom">
-            <Button Content="Cancel" Width="86" Margin="0,0,8,0" IsCancel="True" />
-            <Button Content="OK" Width="86" IsDefault="True" Click="OnOk" />
+            <Button x:Name="CancelButton" Content="Cancel" Width="86" Margin="0,0,8,0" IsCancel="True" />
+            <Button x:Name="OkButton" Content="OK" Width="86" IsDefault="True" Click="OnOk" />
         </StackPanel>
     </Grid>
 </Window>

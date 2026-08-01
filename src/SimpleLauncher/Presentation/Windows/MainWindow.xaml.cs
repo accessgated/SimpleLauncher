@@ -4,6 +4,7 @@ using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using Microsoft.Win32;
+using SimpleLauncher.Infrastructure.Configuration;
 using SimpleLauncher.Infrastructure.Security;
 using SimpleLauncher.Infrastructure.Windows;
 using SimpleLauncher.Logging;
@@ -19,10 +20,14 @@ public partial class MainWindow : Window
     private readonly IConfigurationStore configurationStore;
     private readonly ProcessLauncher launcher;
     private readonly WindowsIconService iconService;
-    private readonly WindowsShellService shellService;
+    private readonly DesktopSessionService desktopSessionService;
     private readonly ConfigurationBackupService backupService;
     private readonly Pbkdf2PinHasher pinHasher;
     private readonly FileLogger logger;
+    private readonly LocalizationService localizationService;
+    private readonly DesktopApplicationCloser applicationCloser;
+    private readonly RecoveryService recoveryService;
+    private readonly AppPaths paths;
     private readonly ObservableCollection<LauncherTile> tiles = [];
 
     public MainWindow(
@@ -30,30 +35,47 @@ public partial class MainWindow : Window
         IConfigurationStore configurationStore,
         ProcessLauncher launcher,
         WindowsIconService iconService,
-        WindowsShellService shellService,
+        DesktopSessionService desktopSessionService,
         ConfigurationBackupService backupService,
         Pbkdf2PinHasher pinHasher,
-        FileLogger logger)
+        FileLogger logger,
+        LocalizationService localizationService,
+        DesktopApplicationCloser applicationCloser,
+        RecoveryService recoveryService,
+        AppPaths paths)
     {
         this.configuration = configuration;
         this.configurationStore = configurationStore;
         this.launcher = launcher;
         this.iconService = iconService;
-        this.shellService = shellService;
+        this.desktopSessionService = desktopSessionService;
         this.backupService = backupService;
         this.pinHasher = pinHasher;
         this.logger = logger;
+        this.localizationService = localizationService;
+        this.applicationCloser = applicationCloser;
+        this.recoveryService = recoveryService;
+        this.paths = paths;
 
         InitializeComponent();
+        Title = localizationService.GetString("AppTitle", configuration);
+        TitleText.Text = localizationService.GetString("AppTitle", configuration);
+        SearchBox.ToolTip = localizationService.GetString("SearchPlaceholder", configuration);
+        AddButton.Content = localizationService.GetString("Add", configuration);
+        SettingsButton.Content = localizationService.GetString("Settings", configuration);
+        ExitButton.Content = localizationService.GetString("Exit", configuration);
         Topmost = configuration.Kiosk.TopMost;
         AppsList.ItemsSource = tiles;
         ApplyBackground();
         RefreshTiles();
 
-        if (configuration.Kiosk.HideTaskbar)
+        if (configuration.Kiosk.HideTaskbar && desktopSessionService.IsExplorerRunning())
         {
-            shellService.HideTaskbar();
+            desktopSessionService.HideTaskbar();
         }
+
+        desktopSessionService.KillExplorerIfRunning();
+        applicationCloser.CloseVisibleApplications(configuration);
     }
 
     private void ApplyBackground()
@@ -62,6 +84,13 @@ public partial class MainWindow : Window
         if (!string.IsNullOrWhiteSpace(backgroundPath) && File.Exists(backgroundPath))
         {
             BackgroundImage.Source = new BitmapImage(new Uri(backgroundPath));
+            return;
+        }
+
+        var fallbackPath = Path.Combine(paths.AssetsDirectory, "Background.jpg");
+        if (File.Exists(fallbackPath))
+        {
+            BackgroundImage.Source = new BitmapImage(new Uri(fallbackPath));
         }
     }
 
@@ -89,8 +118,8 @@ public partial class MainWindow : Window
     {
         var dialog = new OpenFileDialog
         {
-            Title = "Add application",
-            Filter = "Applications and shortcuts|*.exe;*.lnk;*.bat;*.cmd;*.ps1;*.msc|All files|*.*"
+            Title = localizationService.GetString("AddApplicationTitle", configuration),
+            Filter = localizationService.GetString("AddApplicationFilter", configuration)
         };
 
         if (dialog.ShowDialog(this) != true)
@@ -137,11 +166,11 @@ public partial class MainWindow : Window
     {
         if (configuration.Security.LockSettings && !VerifyPin())
         {
-            MessageBox.Show(this, "Settings are protected.", "SimpleLauncher", MessageBoxButton.OK, MessageBoxImage.Warning);
+            MessageBox.Show(this, localizationService.GetString("SettingsProtected", configuration), "SimpleLauncher", MessageBoxButton.OK, MessageBoxImage.Warning);
             return;
         }
 
-        var settings = new SettingsWindow(configuration, configurationStore, backupService, pinHasher) { Owner = this };
+        var settings = new SettingsWindow(configuration, configurationStore, backupService, pinHasher, localizationService, paths) { Owner = this };
         if (settings.ShowDialog() == true)
         {
             await SaveAndRefreshAsync();
@@ -156,6 +185,12 @@ public partial class MainWindow : Window
             return;
         }
 
+        if (Application.Current is App app)
+        {
+            app.MarkExitToWindows();
+        }
+
+        desktopSessionService.StartExplorerIfNeeded();
         Close();
     }
 
@@ -163,7 +198,7 @@ public partial class MainWindow : Window
 
     protected override void OnClosed(EventArgs e)
     {
-        shellService.RestoreDesktop();
+        desktopSessionService.RestoreDesktop();
         base.OnClosed(e);
     }
 
@@ -174,13 +209,14 @@ public partial class MainWindow : Window
             return true;
         }
 
-        var dialog = new PinDialog { Owner = this };
+        var dialog = new PinDialog(localizationService, configuration) { Owner = this };
         return dialog.ShowDialog() == true && pinHasher.Verify(dialog.Pin, configuration.Security.PinHash);
     }
 
     private async Task SaveAndRefreshAsync()
     {
         await configurationStore.SaveAsync(configuration);
+        ApplyBackground();
         RefreshTiles();
     }
 

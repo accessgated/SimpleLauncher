@@ -7,6 +7,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{FCC02E71-C23
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimpleLauncher", "src\SimpleLauncher\SimpleLauncher.csproj", "{8E657CFB-E6E2-4C61-8BEC-FEEB72721DE1}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimpleLauncher.Recovery", "src\SimpleLauncher.Recovery\SimpleLauncher.Recovery.csproj", "{66BE7595-F4E8-4760-BD0F-107406BF406C}"
+EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{8293B54C-B8E4-4D31-B62D-358C4908F00B}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimpleLauncher.Tests", "tests\SimpleLauncher.Tests\SimpleLauncher.Tests.csproj", "{F2F701C5-2E01-4FFC-A6F2-170FB9F48A57}"
@@ -28,9 +30,14 @@ Global
 		{F2F701C5-2E01-4FFC-A6F2-170FB9F48A57}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F2F701C5-2E01-4FFC-A6F2-170FB9F48A57}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F2F701C5-2E01-4FFC-A6F2-170FB9F48A57}.Release|Any CPU.Build.0 = Release|Any CPU
+		{66BE7595-F4E8-4760-BD0F-107406BF406C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{66BE7595-F4E8-4760-BD0F-107406BF406C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{66BE7595-F4E8-4760-BD0F-107406BF406C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{66BE7595-F4E8-4760-BD0F-107406BF406C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{8E657CFB-E6E2-4C61-8BEC-FEEB72721DE1} = {FCC02E71-C233-4134-B6AE-7B03DC403165}
+		{66BE7595-F4E8-4760-BD0F-107406BF406C} = {FCC02E71-C233-4134-B6AE-7B03DC403165}
 		{F2F701C5-2E01-4FFC-A6F2-170FB9F48A57} = {8293B54C-B8E4-4D31-B62D-358C4908F00B}
 	EndGlobalSection
 EndGlobal

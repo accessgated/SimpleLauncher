@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="AppTitle" xml:space="preserve">
+    <value>SimpleLauncher</value>
+  </data>
+  <data name="Settings" xml:space="preserve">
+    <value>Settings</value>
+  </data>
+  <data name="Applications" xml:space="preserve">
+    <value>Applications</value>
+  </data>
+  <data name="SelectedApplication" xml:space="preserve">
+    <value>Selected application</value>
+  </data>
+  <data name="Launcher" xml:space="preserve">
+    <value>Launcher</value>
+  </data>
+  <data name="IconSize" xml:space="preserve">
+    <value>Icon size</value>
+  </data>
+  <data name="ProtectSettings" xml:space="preserve">
+    <value>Protect settings with PIN</value>
+  </data>
+  <data name="HideTaskbar" xml:space="preserve">
+    <value>Hide taskbar in fullscreen mode</value>
+  </data>
+  <data name="ChangePin" xml:space="preserve">
+    <value>Change Administrator PIN</value>
+  </data>
+  <data name="CurrentPin" xml:space="preserve">
+    <value>Current PIN</value>
+  </data>
+  <data name="NewPin" xml:space="preserve">
+    <value>New PIN</value>
+  </data>
+  <data name="ConfirmPin" xml:space="preserve">
+    <value>Confirm new PIN</value>
+  </data>
+  <data name="Backup" xml:space="preserve">
+    <value>Backup</value>
+  </data>
+  <data name="Import" xml:space="preserve">
+    <value>Import</value>
+  </data>
+  <data name="Export" xml:space="preserve">
+    <value>Export</value>
+  </data>
+  <data name="Cancel" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
+  <data name="Save" xml:space="preserve">
+    <value>Save</value>
+  </data>
+  <data name="Add" xml:space="preserve">
+    <value>Add</value>
+  </data>
+  <data name="Exit" xml:space="preserve">
+    <value>Exit</value>
+  </data>
+  <data name="SearchPlaceholder" xml:space="preserve">
+    <value>Search</value>
+  </data>
+  <data name="BackgroundImage" xml:space="preserve">
+    <value>Background image</value>
+  </data>
+  <data name="ChooseImage" xml:space="preserve">
+    <value>Choose image</value>
+  </data>
+  <data name="RecoveryTitle" xml:space="preserve">
+    <value>SimpleLauncher Recovery</value>
+  </data>
+  <data name="RecoveryReturn" xml:space="preserve">
+    <value>Return to Launcher</value>
+  </data>
+  <data name="RecoveryDesktop" xml:space="preserve">
+    <value>Open Windows Desktop</value>
+  </data>
+  <data name="RecoveryPinPrompt" xml:space="preserve">
+    <value>Enter administrator PIN</value>
+  </data>
+  <data name="RecoveryPinError" xml:space="preserve">
+    <value>The PIN was not accepted.</value>
+  </data>
+  <data name="PinRejected" xml:space="preserve">
+    <value>The PIN was not accepted.</value>
+  </data>
+  <data name="SettingsProtected" xml:space="preserve">
+    <value>Settings are protected.</value>
+  </data>
+  <data name="AddApplicationTitle" xml:space="preserve">
+    <value>Add application</value>
+  </data>
+  <data name="AddApplicationFilter" xml:space="preserve">
+    <value>Applications and shortcuts|*.exe;*.lnk;*.bat;*.cmd;*.ps1;*.msc|All files|*.*</value>
+  </data>
+  <data name="ChooseBackgroundTitle" xml:space="preserve">
+    <value>Select background image</value>
+  </data>
+  <data name="ChooseBackgroundFilter" xml:space="preserve">
+    <value>Image files|*.jpg;*.jpeg;*.png;*.bmp;*.gif;*.tiff;*.webp|All files|*.*</value>
+  </data>
+  <data name="BackgroundImageUpdated" xml:space="preserve">
+    <value>Background image updated.</value>
+  </data>
+  <data name="Apply" xml:space="preserve">
+    <value>Apply</value>
+  </data>
+  <data name="Remove" xml:space="preserve">
+    <value>Remove</value>
+  </data>
+  <data name="Language" xml:space="preserve">
+    <value>Language</value>
+  </data>
+  <data name="DeepLKey" xml:space="preserve">
+    <value>DeepL API key</value>
+  </data>
+  <data name="EnableDeepL" xml:space="preserve">
+    <value>Enable DeepL translation</value>
+  </data>
+  <data name="ChangePinButton" xml:space="preserve">
+    <value>Change PIN</value>
+  </data>
+  <data name="PinDialogTitle" xml:space="preserve">
+    <value>PIN required</value>
+  </data>
+  <data name="PinPrompt" xml:space="preserve">
+    <value>Enter PIN</value>
+  </data>
+  <data name="Ok" xml:space="preserve">
+    <value>OK</value>
+  </data>
+</root>

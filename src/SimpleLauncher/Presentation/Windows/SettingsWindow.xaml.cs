@@ -1,6 +1,7 @@
 using System.Collections.ObjectModel;
 using System.Windows;
 using Microsoft.Win32;
+using SimpleLauncher.Infrastructure.Configuration;
 using SimpleLauncher.Infrastructure.Security;
 using SimpleLauncher.Models;
 using SimpleLauncher.Services;
@@ -13,25 +14,59 @@ public partial class SettingsWindow : Window
     private readonly IConfigurationStore configurationStore;
     private readonly ConfigurationBackupService backupService;
     private readonly Pbkdf2PinHasher pinHasher;
+    private readonly LocalizationService localizationService;
+    private readonly AppPaths paths;
     private readonly ObservableCollection<LauncherApplication> apps;
 
     public SettingsWindow(
         LauncherConfiguration configuration,
         IConfigurationStore configurationStore,
         ConfigurationBackupService backupService,
-        Pbkdf2PinHasher pinHasher)
+        Pbkdf2PinHasher pinHasher,
+        LocalizationService localizationService,
+        AppPaths paths)
     {
         this.configuration = configuration;
         this.configurationStore = configurationStore;
         this.backupService = backupService;
         this.pinHasher = pinHasher;
+        this.localizationService = localizationService;
+        this.paths = paths;
         apps = new ObservableCollection<LauncherApplication>(configuration.Apps);
 
         InitializeComponent();
+        Title = localizationService.GetString("Settings", configuration);
+        ApplicationsHeader.Text = localizationService.GetString("Applications", configuration);
+        SelectedApplicationHeader.Text = localizationService.GetString("SelectedApplication", configuration);
+        LauncherHeader.Text = localizationService.GetString("Launcher", configuration);
+        IconSizeLabel.Text = localizationService.GetString("IconSize", configuration);
+        LockSettingsBox.Content = localizationService.GetString("ProtectSettings", configuration);
+        HideTaskbarBox.Content = localizationService.GetString("HideTaskbar", configuration);
+        ChangePinHeader.Text = localizationService.GetString("ChangePin", configuration);
+        CurrentPinLabel.Text = localizationService.GetString("CurrentPin", configuration);
+        NewPinLabel.Text = localizationService.GetString("NewPin", configuration);
+        ConfirmPinLabel.Text = localizationService.GetString("ConfirmPin", configuration);
+        ChangePinButton.Content = localizationService.GetString("ChangePinButton", configuration);
+        BackupButton.Content = localizationService.GetString("Backup", configuration);
+        ImportButton.Content = localizationService.GetString("Import", configuration);
+        ExportButton.Content = localizationService.GetString("Export", configuration);
+        CancelButton.Content = localizationService.GetString("Cancel", configuration);
+        SaveButton.Content = localizationService.GetString("Save", configuration);
+        ApplyButton.Content = localizationService.GetString("Apply", configuration);
+        RemoveButton.Content = localizationService.GetString("Remove", configuration);
+        BackgroundLabel.Text = localizationService.GetString("BackgroundImage", configuration);
+        ChooseBackgroundButton.Content = localizationService.GetString("ChooseImage", configuration);
+        LanguageLabel.Text = localizationService.GetString("Language", configuration);
+        DeepLKeyLabel.Text = localizationService.GetString("DeepLKey", configuration);
+        EnableDeepLBox.Content = localizationService.GetString("EnableDeepL", configuration);
         AppsList.ItemsSource = apps;
         IconSizeSlider.Value = configuration.Layout.IconSize;
         LockSettingsBox.IsChecked = configuration.Security.LockSettings;
         HideTaskbarBox.IsChecked = configuration.Kiosk.HideTaskbar;
+        LanguageBox.Text = configuration.Theme.Language;
+        DeepLApiKeyBox.Text = configuration.Theme.DeepLApiKey;
+        EnableDeepLBox.IsChecked = configuration.Theme.EnableDeepLTranslations;
+        BackgroundPathBox.Text = configuration.Theme.BackgroundImagePath ?? string.Empty;
     }
 
     private void OnSelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
@@ -148,12 +183,38 @@ public partial class SettingsWindow : Window
         DialogResult = true;
     }
 
+    private void OnChooseBackground(object sender, RoutedEventArgs e)
+    {
+        var dialog = new OpenFileDialog
+        {
+            Title = localizationService.GetString("ChooseBackgroundTitle", configuration),
+            Filter = localizationService.GetString("ChooseBackgroundFilter", configuration)
+        };
+
+        if (dialog.ShowDialog(this) != true)
+        {
+            return;
+        }
+
+        var destinationDirectory = paths.AssetsDirectory;
+        Directory.CreateDirectory(destinationDirectory);
+        var destinationPath = Path.Combine(destinationDirectory, Path.GetFileName(dialog.FileName));
+        File.Copy(dialog.FileName, destinationPath, true);
+        BackgroundPathBox.Text = destinationPath;
+        configuration.Theme.BackgroundImagePath = destinationPath;
+        MessageBox.Show(this, localizationService.GetString("BackgroundImageUpdated", configuration), "SimpleLauncher", MessageBoxButton.OK, MessageBoxImage.Information);
+    }
+
     private void ApplyToConfiguration()
     {
         configuration.Apps = apps.ToList();
         configuration.Layout.IconSize = (int)IconSizeSlider.Value;
         configuration.Security.LockSettings = LockSettingsBox.IsChecked == true;
         configuration.Kiosk.HideTaskbar = HideTaskbarBox.IsChecked == true;
+        configuration.Theme.Language = string.IsNullOrWhiteSpace(LanguageBox.Text) ? "en-US" : LanguageBox.Text.Trim();
+        configuration.Theme.DeepLApiKey = string.IsNullOrWhiteSpace(DeepLApiKeyBox.Text) ? null : DeepLApiKeyBox.Text.Trim();
+        configuration.Theme.EnableDeepLTranslations = EnableDeepLBox.IsChecked == true;
+        configuration.Theme.BackgroundImagePath = string.IsNullOrWhiteSpace(BackgroundPathBox.Text) ? null : BackgroundPathBox.Text.Trim();
     }
 
     private bool ValidateCurrentPin(string currentPin)

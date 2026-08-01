@@ -20,6 +20,10 @@ The project is intentionally independent. AccessGate or any other product may la
 - Friendly error handling for missing icons, missing backgrounds, invalid config, and launch failures.
 - File logging under `%AppData%\SimpleLauncher\Logs`.
 - Reversible taskbar hiding for kiosk-style sessions.
+- Configurable background image management with automatic asset copying.
+- A recovery companion app that can return to the launcher or open the Windows desktop after PIN verification.
+- Optional DeepL-based translation support with local caching and English fallback.
+- A more modern landscape settings layout with logical sections.
 
 ## Screenshots
 

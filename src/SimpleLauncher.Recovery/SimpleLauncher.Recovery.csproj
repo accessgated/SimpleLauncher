@@ -1,0 +1,16 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <RuntimeIdentifiers>win-x64</RuntimeIdentifiers>
+    <UseWPF>true</UseWPF>
+    <UseWindowsForms>true</UseWindowsForms>
+    <ImplicitUsings>disable</ImplicitUsings>
+    <RootNamespace>SimpleLauncher.Recovery</RootNamespace>
+    <AssemblyName>SimpleLauncherRecovery</AssemblyName>
+    <ApplicationIcon>..\..\Assets\SimpleLaucher.ico</ApplicationIcon>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\SimpleLauncher\SimpleLauncher.csproj" />
+  </ItemGroup>
+</Project>

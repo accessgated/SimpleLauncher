@@ -27,6 +27,10 @@ public sealed class ThemeSettings
     public string? BackgroundImagePath { get; set; }
 
     public string Language { get; set; } = "en-US";
+
+    public string? DeepLApiKey { get; set; }
+
+    public bool EnableDeepLTranslations { get; set; }
 }
 
 public sealed class LayoutSettings
@@ -54,6 +58,8 @@ public sealed class KioskSettings
     public bool BlockWindowsKeys { get; set; }
 
     public bool TopMost { get; set; } = true;
+
+    public List<string> DesktopCloseExclusions { get; set; } = [];
 }
 
 public sealed class StartupSettings

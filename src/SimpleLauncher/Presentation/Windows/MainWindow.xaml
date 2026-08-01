@@ -14,12 +14,12 @@
                 <RowDefinition Height="*" />
             </Grid.RowDefinitions>
             <DockPanel>
-                <TextBlock Text="SimpleLauncher" FontSize="30" FontWeight="SemiBold" Foreground="{DynamicResource LauncherTextBrush}" DockPanel.Dock="Left" />
+                <TextBlock x:Name="TitleText" Text="SimpleLauncher" FontSize="30" FontWeight="SemiBold" Foreground="{DynamicResource LauncherTextBrush}" DockPanel.Dock="Left" />
                 <StackPanel Orientation="Horizontal" DockPanel.Dock="Right" HorizontalAlignment="Right">
                     <TextBox x:Name="SearchBox" Width="280" Height="36" Margin="0,0,10,0" VerticalContentAlignment="Center" TextChanged="OnSearchChanged" />
-                    <Button Content="Add" Width="82" Margin="0,0,8,0" Click="OnAddApplication" />
-                    <Button Content="Settings" Width="96" Margin="0,0,8,0" Click="OnSettings" />
-                    <Button Content="Exit" Width="82" Click="OnExit" />
+                    <Button x:Name="AddButton" Content="Add" Width="82" Margin="0,0,8,0" Click="OnAddApplication" />
+                    <Button x:Name="SettingsButton" Content="Settings" Width="96" Margin="0,0,8,0" Click="OnSettings" />
+                    <Button x:Name="ExitButton" Content="Exit" Width="82" Click="OnExit" />
                 </StackPanel>
             </DockPanel>
             <ScrollViewer Grid.Row="1" Margin="0,28,0,0" VerticalScrollBarVisibility="Auto">
