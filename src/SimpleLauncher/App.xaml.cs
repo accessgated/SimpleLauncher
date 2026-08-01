@@ -53,7 +53,7 @@ public partial class App : System.Windows.Application
             var processLauncher = new ProcessLauncher(logger, validator);
             var backupService = new ConfigurationBackupService(paths, logger);
             var closer = new DesktopApplicationCloser(logger);
-            recoveryService = new RecoveryService(configuration, configurationStore, passwordHasher, logger, desktopSessionService, paths, localizationService);
+            recoveryService = new RecoveryService(configuration, configurationStore, passwordHasher, logger, desktopSessionService, localizationService);
             var mainWindow = new MainWindow(configuration, configurationStore, processLauncher, iconService, desktopSessionService, backupService, passwordHasher, logger, localizationService, closer, recoveryService, paths);
             MainWindow = mainWindow;
             mainWindow.Show();

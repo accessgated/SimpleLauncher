@@ -3,6 +3,7 @@ using SimpleLauncher.Infrastructure.Security;
 using SimpleLauncher.Infrastructure.Windows;
 using SimpleLauncher.Logging;
 using SimpleLauncher.Models;
+using SimpleLauncher.Presentation.Dialogs;
 using SimpleLauncher.Services;
 
 namespace SimpleLauncher.Presentation.Windows;

@@ -1,5 +1,7 @@
+using System.IO;
 using System.Windows;
 using SimpleLauncher.Infrastructure.Configuration;
+using SimpleLauncher.Infrastructure.Migration;
 using SimpleLauncher.Infrastructure.Security;
 using SimpleLauncher.Infrastructure.Windows;
 using SimpleLauncher.Logging;
@@ -24,7 +26,7 @@ public partial class App : Application
         var desktopSessionService = new DesktopSessionService(logger);
         var localizationService = new LocalizationService(paths, logger);
         localizationService.LoadCache();
-        var recoveryService = new RecoveryService(configuration, configurationStore, passwordHasher, logger, desktopSessionService, paths, localizationService);
+        var recoveryService = new RecoveryService(configuration, configurationStore, passwordHasher, logger, desktopSessionService, localizationService);
         var recoveryWindow = new RecoveryWindow(configuration, configurationStore, passwordHasher, logger, desktopSessionService, recoveryService, localizationService);
         MainWindow = recoveryWindow;
         recoveryWindow.Show();

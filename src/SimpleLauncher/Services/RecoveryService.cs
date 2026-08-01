@@ -18,7 +18,6 @@ public sealed class RecoveryService(
     Pbkdf2PinHasher pinHasher,
     FileLogger logger,
     DesktopSessionService desktopSessionService,
-    AppPaths paths,
     LocalizationService localizationService)
 {
     private readonly object syncRoot = new();
