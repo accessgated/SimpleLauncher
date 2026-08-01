@@ -23,4 +23,16 @@ public sealed class Pbkdf2PinHasherTests
 
         Assert.IsFalse(hasher.Verify("1357", hash));
     }
+    [TestMethod]
+    public void HashGeneratesDifferentSaltForSamePin()
+    {
+        var hasher = new Pbkdf2PinHasher();
+
+        var firstHash = hasher.Hash("2468");
+        var secondHash = hasher.Hash("2468");
+
+        Assert.AreNotEqual(firstHash, secondHash);
+        Assert.IsTrue(hasher.Verify("2468", firstHash));
+        Assert.IsTrue(hasher.Verify("2468", secondHash));
+    }
 }

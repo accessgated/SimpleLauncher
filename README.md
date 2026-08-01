@@ -72,11 +72,11 @@ The GitHub Release workflow packages only `SimpleLauncher.exe`, `README.md`, `LI
 Releases are fully automated from Git tags:
 
 ```powershell
-git tag v1.0.0
-git push origin v1.0.0
+git tag v0.1.3
+git push origin v0.1.3
 ```
 
-After the tag is pushed, GitHub Actions restores, builds, tests, publishes, packages `SimpleLauncher-v1.0.0-win-x64.zip`, generates `SHA256SUMS.txt`, creates or updates the GitHub Release, and uploads both assets. No signing certificate, paid service, or secret beyond the default `GITHUB_TOKEN` is required.
+After the tag is pushed, GitHub Actions restores, builds, tests, publishes, packages `SimpleLauncher-v0.1.3-win-x64.zip`, generates `SHA256SUMS.txt`, creates or updates the GitHub Release, and uploads both assets. No signing certificate, paid service, or secret beyond the default `GITHUB_TOKEN` is required.
 
 ## Configuration
 
@@ -96,6 +96,16 @@ The application creates a safe default configuration on first launch and automat
 - Settings create a backup before configuration changes.
 
 The first-run default PIN is `1234`. Change it before deploying to children, students, guests, or public users.
+
+### Changing the Administrator PIN
+
+1. Open **Settings** from the launcher.
+2. Enter the current administrator PIN if settings protection is enabled.
+3. In **Change Administrator PIN**, enter the current PIN.
+4. Enter the new PIN, then enter it again to confirm.
+5. Select **Change PIN**.
+
+The new PIN must be at least 4 characters long. SimpleLauncher saves the new PIN immediately and stores it as a PBKDF2-SHA256 hash with a new random salt.
 
 ## Troubleshooting
 

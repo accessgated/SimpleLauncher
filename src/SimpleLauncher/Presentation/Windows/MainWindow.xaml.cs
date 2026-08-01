@@ -141,7 +141,7 @@ public partial class MainWindow : Window
             return;
         }
 
-        var settings = new SettingsWindow(configuration, configurationStore, backupService) { Owner = this };
+        var settings = new SettingsWindow(configuration, configurationStore, backupService, pinHasher) { Owner = this };
         if (settings.ShowDialog() == true)
         {
             await SaveAndRefreshAsync();

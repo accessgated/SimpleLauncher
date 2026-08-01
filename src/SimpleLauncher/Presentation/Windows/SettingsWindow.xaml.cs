@@ -1,6 +1,7 @@
 using System.Collections.ObjectModel;
 using System.Windows;
 using Microsoft.Win32;
+using SimpleLauncher.Infrastructure.Security;
 using SimpleLauncher.Models;
 using SimpleLauncher.Services;
 
@@ -11,13 +12,19 @@ public partial class SettingsWindow : Window
     private readonly LauncherConfiguration configuration;
     private readonly IConfigurationStore configurationStore;
     private readonly ConfigurationBackupService backupService;
+    private readonly Pbkdf2PinHasher pinHasher;
     private readonly ObservableCollection<LauncherApplication> apps;
 
-    public SettingsWindow(LauncherConfiguration configuration, IConfigurationStore configurationStore, ConfigurationBackupService backupService)
+    public SettingsWindow(
+        LauncherConfiguration configuration,
+        IConfigurationStore configurationStore,
+        ConfigurationBackupService backupService,
+        Pbkdf2PinHasher pinHasher)
     {
         this.configuration = configuration;
         this.configurationStore = configurationStore;
         this.backupService = backupService;
+        this.pinHasher = pinHasher;
         apps = new ObservableCollection<LauncherApplication>(configuration.Apps);
 
         InitializeComponent();
@@ -66,6 +73,31 @@ public partial class SettingsWindow : Window
     {
         var backupPath = backupService.Backup();
         MessageBox.Show(this, $"Backup created:\n{backupPath}", "SimpleLauncher", MessageBoxButton.OK, MessageBoxImage.Information);
+    }
+
+    private async void OnChangePin(object sender, RoutedEventArgs e)
+    {
+        if (!ValidateCurrentPin(CurrentPinBox.Password))
+        {
+            MessageBox.Show(this, "The current PIN is incorrect.", "SimpleLauncher", MessageBoxButton.OK, MessageBoxImage.Warning);
+            return;
+        }
+
+        if (!ValidateNewPin(NewPinBox.Password, ConfirmPinBox.Password, out var validationMessage))
+        {
+            MessageBox.Show(this, validationMessage, "SimpleLauncher", MessageBoxButton.OK, MessageBoxImage.Warning);
+            return;
+        }
+
+        ApplyToConfiguration();
+        configuration.Security.IsPinEnabled = true;
+        configuration.Security.PinHash = pinHasher.Hash(NewPinBox.Password);
+        await configurationStore.SaveAsync(configuration);
+
+        CurrentPinBox.Clear();
+        NewPinBox.Clear();
+        ConfirmPinBox.Clear();
+        MessageBox.Show(this, "The administrator PIN was changed.", "SimpleLauncher", MessageBoxButton.OK, MessageBoxImage.Information);
     }
 
     private async void OnImport(object sender, RoutedEventArgs e)
@@ -122,6 +154,37 @@ public partial class SettingsWindow : Window
         configuration.Layout.IconSize = (int)IconSizeSlider.Value;
         configuration.Security.LockSettings = LockSettingsBox.IsChecked == true;
         configuration.Kiosk.HideTaskbar = HideTaskbarBox.IsChecked == true;
+    }
+
+    private bool ValidateCurrentPin(string currentPin)
+    {
+        return configuration.Security.IsPinEnabled
+            && !string.IsNullOrWhiteSpace(configuration.Security.PinHash)
+            && pinHasher.Verify(currentPin, configuration.Security.PinHash);
+    }
+
+    private static bool ValidateNewPin(string newPin, string confirmation, out string validationMessage)
+    {
+        if (string.IsNullOrWhiteSpace(newPin) || string.IsNullOrWhiteSpace(confirmation))
+        {
+            validationMessage = "The new PIN and confirmation are required.";
+            return false;
+        }
+
+        if (newPin.Length < 4)
+        {
+            validationMessage = "The new PIN must be at least 4 characters long.";
+            return false;
+        }
+
+        if (!string.Equals(newPin, confirmation, StringComparison.Ordinal))
+        {
+            validationMessage = "The new PIN and confirmation do not match.";
+            return false;
+        }
+
+        validationMessage = string.Empty;
+        return true;
     }
 
     private static string GetDisplayName(string path)
